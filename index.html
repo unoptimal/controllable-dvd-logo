@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e</title>
+
+    <style> 
+
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+</head>
+<body>
+    <canvas id = "myCanvas"></canvas>
+<script>
+
+let logoColor;
+let canvas;
+let ctx;
+let scale = 0.17;
+
+let logo = {
+    logoImage: new Image(),
+    x: 500,
+    y: 300,
+    xspeed: 2,
+    yspeed: 2,
+    pressXSpeed: 3,
+    pressYSpeed: 3,
+};
+
+document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener('keydown', keyDownHandler, false);
+
+let rightPressed = false;
+let leftPressed = false;
+let upPressed = false;
+let downPressed = false;
+
+
+(function main(){
+    canvas = document.getElementById("myCanvas");
+    ctx = canvas.getContext("2d");
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    pickColor();
+    update();
+
+})();
+
+
+//draw the background, logo, and logo square
+function update(){
+
+
+logo.logoImage.onload = () => {
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = logoColor;
+    ctx.fillRect(logo.x, logo.y, logo.logoImage.width * scale, logo.logoImage.height * scale);
+    ctx.drawImage(logo.logoImage, logo.x, logo.y, logo.logoImage.width * scale, logo.logoImage.height * scale)
+};
+    logo.logoImage.src = "./dvd-logo.png";
+
+    if(rightPressed) {
+        logo.x += logo.pressXSpeed;
+   
+    }
+    else if(leftPressed) {
+        logo.x -= logo.pressXSpeed;
+
+    }
+    if(downPressed) {
+        logo.y += logo.pressYSpeed;
+     
+    }
+    else if(upPressed) {
+        logo.y -= logo.pressYSpeed;
+     }
+    
+
+logo.x += logo.xspeed;
+//logo.y += logo.yspeed;
+
+check();
+    window.requestAnimationFrame(update);
+}
+window.requestAnimationFrame(update);
+
+//hit detection
+function check(){
+    if(logo.x + (logo.logoImage.width * scale) >= canvas.width || logo.x <= 0){
+         logo.xspeed *= -1;
+         pickColor();
+     }
+
+    if(logo.y + (logo.logoImage.height * scale) >= canvas.height || logo.y <= 0){
+        logo.yspeed *= -1;
+        pickColor();
+    }     
+}
+
+//register keypresses, but suspend keypress if in zone
+
+function keyDownHandler(event) {
+    if((event.keyCode == 39 || event.keyCode === 68)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ){
+        
+        rightPressed = true;
+    
+        
+    }
+    else if((event.keyCode == 37 || event.keyCode === 65)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ) {
+        leftPressed = true;
+
+    }
+    if((event.keyCode == 40 || event.keyCode === 83)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ) {
+    	
+        downPressed = true;
+
+    }
+    else if((event.keyCode == 38 || event.keyCode === 87)
+    && !(logo.x + (logo.logoImage.width * scale) >= (canvas.width * 0.925))
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35)))
+    
+    ) {
+    	upPressed = true;
+    }
+
+}
+
+function keyUpHandler(event) {
+    if((event.keyCode == 39 || event.keyCode === 68) 
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    
+    ) {
+        rightPressed = false;
+        
+    }
+    else if((event.keyCode == 37 || event.keyCode === 65)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ) {
+
+        leftPressed = false;
+        
+    }
+    if((event.keyCode == 40 || event.keyCode === 83)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ) {
+    	downPressed = false;
+    }
+    else if((event.keyCode == 38 || event.keyCode === 87)
+    && !(logo.x + (logo.logoImage.width * scale) >= canvas.width * 0.925)
+    && !(logo.x + (logo.logoImage.width * scale) <= (canvas.width * 0.35))
+    && !(logo.y + (logo.logoImage.height * scale) >= (canvas.height) * 0.925)
+    && !(logo.y + (logo.logoImage.height * scale) <= (canvas.height * 0.35))
+    ){
+    	upPressed = false;
+    }
+
+}
+
+//change color when we hit a corner
+function pickColor(){
+    r = Math.random() * (254 - 0) + 0;
+    g = Math.random() * (254 - 0) + 0;
+    b = Math.random() * (254 - 0) + 0;
+
+    logoColor = 'rgb('+r+','+g+', '+b+')';
+}
+
+
+</script>
+
+
+</body>
+</html>
+
+
